@@ -2,9 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:jt_jobs/Profile.dart';
-import 'package:jt_jobs/applications.dart';
+import 'package:jt_jobs/applications/applications_screen.dart';
 import 'package:jt_jobs/DashBoardScreen/dashboard.dart';
-import 'package:jt_jobs/search_screen.dart';
+import 'package:jt_jobs/profile_screen/profile_screen.dart';
+
+import 'SearchScreen/search_screen.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -45,9 +47,9 @@ class _HomeState extends State<Home> {
           },
           children: <Widget>[
             DashBoard(),
-            Applications(),
+            ApplicationsScreen(),
             SearchScreen(),
-            Profile(),
+            ProfileScreen()
           ],
         ),
       ),

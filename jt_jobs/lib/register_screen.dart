@@ -1,5 +1,9 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:jt_jobs/firebase/models/user_model.dart';
+import 'package:jt_jobs/firebase/service/authentication_service.dart';
 import 'package:jt_jobs/login_screen.dart';
 
 class RegiterScreen extends StatefulWidget {
@@ -11,18 +15,16 @@ class RegiterScreen extends StatefulWidget {
 
 class _RegiterScreenState extends State<RegiterScreen> {
   var passwordVisablity = true;
-  String _name, _email, _password, _confirmPassword;
+  String _name, _email, _password, _confirmPassword, _jobTitle;
   final TextEditingController _namecontroller = TextEditingController();
+  final TextEditingController _jobTitlecontroller = TextEditingController();
   final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _passwordcontroller = TextEditingController();
   final TextEditingController _confirmPasswordcontroller =
       TextEditingController();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   //FirebaseAuth auth;
-  bool emailValidation = true,
-      passwordValidation = true,
-      secondPasswordValidation = true,
-      nameValidation = true;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -86,7 +88,52 @@ class _RegiterScreenState extends State<RegiterScreen> {
                     },
                   ),
                 ),
+                //Job Title
 
+                Container(
+                  margin: EdgeInsets.only(bottom: 10, right: 20, left: 20),
+                  child: TextFormField(
+                    controller: _jobTitlecontroller,
+                    decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                        borderSide: BorderSide(color: Colors.green, width: 1.5),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                        borderSide: BorderSide(
+                          color: Colors.blue,
+                          width: 1.5,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                        borderSide: BorderSide(
+                          color: Colors.blue,
+                          width: 1.5,
+                        ),
+                      ),
+                      hintText: "Enater JobTitle",
+                      hintStyle: TextStyle(fontSize: 20),
+                      prefixIcon: Icon(
+                        Icons.person,
+                        color: Colors.blue,
+                      ),
+                    ),
+                    keyboardType: TextInputType.text,
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return "Please Enter JobTitle";
+                      }
+                      return null;
+                    },
+                    onSaved: (String jopTitle) {
+                      _jobTitle = jopTitle;
+                    },
+                  ),
+                ),
                 //Email TextField
                 Container(
                   margin: EdgeInsets.only(bottom: 10, right: 20, left: 20),
@@ -124,8 +171,6 @@ class _RegiterScreenState extends State<RegiterScreen> {
                     validator: (String value) {
                       if (value.isEmpty) {
                         return "Please Enter Email";
-                      } else if (EmailValidator.validate(value)) {
-                        return "Please Enter Valid Email";
                       }
                       return null;
                     },
@@ -135,7 +180,6 @@ class _RegiterScreenState extends State<RegiterScreen> {
                   ),
                 ),
                 // Password TextField
-
                 Container(
                   margin: EdgeInsets.only(bottom: 10, right: 20, left: 20),
                   child: TextFormField(
@@ -265,14 +309,30 @@ class _RegiterScreenState extends State<RegiterScreen> {
                   child: SizedBox(
                     width: size.width,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formkey.currentState.validate()) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()),
+                          AuthenticationService auth =
+                              new AuthenticationService();
+                          bool valid = await auth.registration(
+                            _emailcontroller.text.toString(),
+                            _passwordcontroller.text.toString(),
                           );
-                        } else {}
+                          if (valid) {
+                            UserModel user = new UserModel(
+                                name: _namecontroller.text.toString(),
+                                email: _emailcontroller.text.toString(),
+                                jopTitle: _jobTitlecontroller.text.toString());
+                            user.skills = ["C++", "Java", "Python"];
+                            await auth.addUser(user);
+                            FirebaseAuth.instance.signOut();
+                            Fluttertoast.showToast(
+                                msg: "The Account Created Successfully.",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1);
+                            Navigator.pop(context);
+                          }
+                        }
                       },
                       child: Text(
                         'Register',
@@ -288,9 +348,7 @@ class _RegiterScreenState extends State<RegiterScreen> {
                     ),
                   ),
                 ),
-
                 // Footer
-
                 Image.asset(
                   "assets/images/footer.png",
                 ),
@@ -300,13 +358,5 @@ class _RegiterScreenState extends State<RegiterScreen> {
         ),
       ),
     );
-  }
-
-  void isValide() {
-    /*if (_emailcontroller.text.isEmpty || ) {
-      emailValidation = false;
-      
-    }
-    if()*/
   }
 }
