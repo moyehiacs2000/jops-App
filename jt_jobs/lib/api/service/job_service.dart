@@ -3,7 +3,7 @@ import 'package:jt_jobs/api/models/api_jop.dart';
 
 class JobService {
   String baseUrl =
-      "https://serpapi.com/search.json?engine=google_jobs&q=barista+new+york&hl=en&api_key=15e0b21572ca4431586ce36d46830a92dd8f1c87170ce7896c62c511823c53be";
+      "https://serpapi.com/search.json?engine=google_jobs&q=barista+new+york&hl=en&api_key=4d7fa40b2c9496f608a5e5b435f1be584cb2aec7c743fda2e57dd17791ff7adf";
   List<JobsResult> jobList = [];
   Future<List<JobsResult>> getJob() async {
     try {

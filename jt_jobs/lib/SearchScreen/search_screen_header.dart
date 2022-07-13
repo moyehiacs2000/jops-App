@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:jt_jobs/SearchScreen/find_item.dart';
+import 'package:jt_jobs/firebase/models/user_model.dart';
 
 class SearchScreenHeader extends StatelessWidget {
-  const SearchScreenHeader({Key key}) : super(key: key);
+  final UserModel user;
+  SearchScreenHeader(this.user, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,28 +28,34 @@ class SearchScreenHeader extends StatelessWidget {
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  child: Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      padding: EdgeInsets.all(10),
-                      height: 54,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                                offset: Offset(0, 10),
-                                blurRadius: 50,
-                                color: Colors.black.withOpacity(0.10)),
-                          ]),
-                      child: TextField(
-                        decoration: InputDecoration(
-                            hintText: "Search",
-                            hintStyle: TextStyle(color: Colors.black),
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            suffixIcon: Icon(Icons.search)),
-                      )))
+                  child: InkWell(
+                    onTap: () {
+                      showSearch(
+                          context: context, delegate: FindItem(user: user));
+                    },
+                    child: Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        padding: EdgeInsets.all(10),
+                        height: 54,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                  offset: Offset(0, 10),
+                                  blurRadius: 50,
+                                  color: Colors.black.withOpacity(0.10)),
+                            ]),
+                        child: TextField(
+                          decoration: InputDecoration(
+                              hintText: "Search",
+                              hintStyle: TextStyle(color: Colors.black),
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              suffixIcon: Icon(Icons.search)),
+                        )),
+                  )),
             ],
           ),
         )

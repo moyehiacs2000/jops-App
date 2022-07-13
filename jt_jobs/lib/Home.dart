@@ -1,14 +1,15 @@
 //@dart=2.9
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-import 'package:jt_jobs/Profile.dart';
 import 'package:jt_jobs/applications/applications_screen.dart';
 import 'package:jt_jobs/DashBoardScreen/dashboard.dart';
 import 'package:jt_jobs/profile_screen/profile_screen.dart';
-
 import 'SearchScreen/search_screen.dart';
+import 'firebase/models/user_model.dart';
 
 class Home extends StatefulWidget {
+  final UserModel user;
+  const Home(this.user, {Key key}) : super(key: key);
   @override
   _HomeState createState() => _HomeState();
 }
@@ -17,6 +18,7 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   PageController _pageController;
   final PageStorageBucket bucket = PageStorageBucket();
+
   @override
   void initState() {
     super.initState();
@@ -46,10 +48,10 @@ class _HomeState extends State<Home> {
             setState(() => _selectedIndex = index);
           },
           children: <Widget>[
-            DashBoard(),
-            ApplicationsScreen(),
-            SearchScreen(),
-            ProfileScreen()
+            DashBoard(widget.user),
+            ApplicationsScreen(widget.user),
+            SearchScreen(widget.user),
+            ProfileScreen(widget.user)
           ],
         ),
       ),

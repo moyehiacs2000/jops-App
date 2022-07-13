@@ -1,38 +1,44 @@
 import 'package:flutter/cupertino.dart';
 
 class FirebaseJobModel {
-  String address;
-  String department;
-  String description;
-  String disability;
-  String organization;
+  String jobID;
+  String companyLogoUrl;
+  String companyName;
   String title;
+  String location;
+  String description;
+  String postedAt;
+  String scheduleType;
 
   FirebaseJobModel({
-    @required this.address,
-    @required this.department,
-    @required this.description,
-    @required this.disability,
-    @required this.organization,
+    @required this.companyLogoUrl,
+    @required this.companyName,
     @required this.title,
+    @required this.location,
+    @required this.description,
+    @required this.postedAt,
+    @required this.scheduleType,
   });
 
-  FirebaseJobModel.fromMap(Map<dynamic, dynamic> data)
-      : address = data['address'] ?? '',
-        department = data['department'] ?? '',
+  FirebaseJobModel.fromMap(Map<dynamic, dynamic> data, String id)
+      : jobID = id ?? '',
+        companyLogoUrl = data['company_logo_url'] ?? '',
+        companyName = data['company_name'] ?? '',
+        title = data['title'] ?? '',
+        location = data['location'] ?? '',
         description = data['description'] ?? '',
-        disability = data['disability'] ?? '',
-        organization = data['organization'] ?? '',
-        title = data['title'] ?? '';
+        postedAt = data['posted_at'] ?? '',
+        scheduleType = data['schedule_type'] ?? '';
 
   Map<String, dynamic> toMap() {
     return {
-      "address": address,
-      "department": department,
-      "description": description,
-      "disability": disability,
-      "organization": organization,
+      "company_logo_url": companyLogoUrl,
+      "company_name": companyName,
       "title": title,
+      "location": location,
+      "description": description,
+      "posted_at": postedAt,
+      "schedule_type": scheduleType
     };
   }
 }

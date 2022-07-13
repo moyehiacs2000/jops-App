@@ -1,12 +1,14 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:jt_jobs/api/models/api_jop.dart';
+import 'package:jt_jobs/firebase/models/user_model.dart';
 import 'package:jt_jobs/job_description/job_description_screen.dart';
 
+import '../firebase/models/firebase_job_model.dart';
+
 class JopCard2 extends StatelessWidget {
-  final JobsResult data;
-  const JopCard2(this.data, {Key key}) : super(key: key);
+  final FirebaseJobModel data;
+  final UserModel user;
+  const JopCard2(this.data, this.user, {Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,7 +27,7 @@ class JopCard2 extends StatelessWidget {
         openColor: Color(0xFFF6F7FB),
         openElevation: 0,
         openBuilder: (context, action) {
-          return JopDescriptionScreen(data);
+          return JopDescriptionScreen(data, user);
         },
         closedColor: Colors.transparent,
         closedElevation: 0,
@@ -41,7 +43,7 @@ class JopCard2 extends StatelessWidget {
                 Row(
                   children: [
                     Image.network(
-                      data.thumbnail ??
+                      data.companyLogoUrl ??
                           "https://th.bing.com/th/id/R.301257298931ca32d333bcde5d523c85?rik=z9n1A0HDB1r8Vw&pid=ImgRaw&r=0",
                       height: 40,
                       width: 40,
@@ -76,7 +78,7 @@ class JopCard2 extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  data.detectedExtensions.postedAt ?? "2 days ago",
+                  data.postedAt ?? "2 days ago",
                   style: TextStyle(
                     fontSize: 10,
                     color: Color(0xFFB9B8CD),

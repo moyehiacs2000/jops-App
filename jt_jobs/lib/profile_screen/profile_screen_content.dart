@@ -1,7 +1,6 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:jt_jobs/api/models/api_jop.dart';
 
 class ProfileScreenContent extends StatefulWidget {
   const ProfileScreenContent({Key key}) : super(key: key);

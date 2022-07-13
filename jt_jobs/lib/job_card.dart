@@ -17,11 +17,11 @@ class JopCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Image.network(
+                /*Image.network(
                   "https://th.bing.com/th/id/R.301257298931ca32d333bcde5d523c85?rik=z9n1A0HDB1r8Vw&pid=ImgRaw&r=0",
                   height: 40,
                   width: 40,
-                ),
+                ),*/
                 const SizedBox(width: 10),
                 Text("Manthul Inc",
                     style: TextStyle(

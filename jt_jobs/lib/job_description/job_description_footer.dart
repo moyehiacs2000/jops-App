@@ -1,26 +1,35 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:jt_jobs/api/models/api_jop.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:jt_jobs/firebase/models/firebase_job_model.dart';
+import 'package:jt_jobs/firebase/models/user_model.dart';
+import 'package:jt_jobs/firebase/service/firebase_job_service.dart';
+
+import '../firebase/service/authentication_service.dart';
 
 class JobDescriptionFooter extends StatefulWidget {
-  final JobsResult data;
-  const JobDescriptionFooter(this.data, {Key key}) : super(key: key);
+  final FirebaseJobModel data;
+  final UserModel user;
+  const JobDescriptionFooter(this.data, this.user, {Key key}) : super(key: key);
 
   @override
   _JobDescriptionFooterState createState() => _JobDescriptionFooterState();
 }
 
 class _JobDescriptionFooterState extends State<JobDescriptionFooter> {
+  Map<String, bool> applied = Map();
+  bool appliedLoading = false;
   @override
   Widget build(BuildContext context) {
     String applyText;
     Color color;
-    if (1 == 1) {
+    if (!widget.user.appliedJobs.contains(widget.data.jobID)) {
       applyText = 'Apply Now';
       color = Color.fromRGBO(113, 40, 220, 1);
     } else {
-      applyText = 'Applied';
-      color = Colors.grey;
+      applyText = 'Cancel';
+      color = Colors.red;
     }
 
     return Positioned(
@@ -59,26 +68,72 @@ class _JobDescriptionFooterState extends State<JobDescriptionFooter> {
             ),
             const SizedBox(width: 20),
             Expanded(
-                child: InkWell(
-              onTap: () {},
-              child: Container(
-                height: 60,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Center(
-                  child: Text(
-                    applyText,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w500,
+              child: appliedLoading
+                  ? Container(
+                      child: Center(
+                        child: CircularProgressIndicator(
+                            color: Color.fromRGBO(113, 40, 220, 1)),
+                      ),
+                    )
+                  : InkWell(
+                      onTap: () async {
+                        setState(() {
+                          appliedLoading = true;
+                        });
+                        if (applyText == "Apply Now") {
+                          await FirebaseJobService().addApplication(
+                              widget.data.jobID, widget.user.id);
+                          widget.user.appliedJobs.add(widget.data.jobID);
+                          await AuthenticationService().addUser(widget.user);
+
+                          if (mounted) {
+                            setState(() {
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.SUCCES,
+                                animType: AnimType.BOTTOMSLIDE,
+                                title: 'You Applied Successfuly',
+                                btnOkOnPress: () {},
+                              )..show();
+                              appliedLoading = false;
+                            });
+                          }
+                        } else if (applyText == "Cancel") {
+                          widget.user.appliedJobs.remove(widget.data.jobID);
+                          await AuthenticationService().addUser(widget.user);
+                          if (mounted) {
+                            setState(() {
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.SUCCES,
+                                animType: AnimType.BOTTOMSLIDE,
+                                title: 'You Canceled Successfuly',
+                                btnOkOnPress: () {},
+                              )..show();
+                              appliedLoading = false;
+                            });
+                          }
+                        }
+                      },
+                      child: Container(
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: color,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Center(
+                          child: Text(
+                            applyText,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            ))
+            )
           ],
         ),
       ),

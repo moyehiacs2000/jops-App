@@ -1,10 +1,8 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jt_jobs/firebase/models/user_model.dart';
 import 'package:jt_jobs/firebase/service/authentication_service.dart';
-import 'package:jt_jobs/login_screen.dart';
 
 class RegiterScreen extends StatefulWidget {
   const RegiterScreen({Key key}) : super(key: key);
@@ -15,7 +13,6 @@ class RegiterScreen extends StatefulWidget {
 
 class _RegiterScreenState extends State<RegiterScreen> {
   var passwordVisablity = true;
-  String _name, _email, _password, _confirmPassword, _jobTitle;
   final TextEditingController _namecontroller = TextEditingController();
   final TextEditingController _jobTitlecontroller = TextEditingController();
   final TextEditingController _emailcontroller = TextEditingController();
@@ -83,9 +80,6 @@ class _RegiterScreenState extends State<RegiterScreen> {
                       }
                       return null;
                     },
-                    onSaved: (String name) {
-                      _name = name;
-                    },
                   ),
                 ),
                 //Job Title
@@ -129,9 +123,6 @@ class _RegiterScreenState extends State<RegiterScreen> {
                       }
                       return null;
                     },
-                    onSaved: (String jopTitle) {
-                      _jobTitle = jopTitle;
-                    },
                   ),
                 ),
                 //Email TextField
@@ -173,9 +164,6 @@ class _RegiterScreenState extends State<RegiterScreen> {
                         return "Please Enter Email";
                       }
                       return null;
-                    },
-                    onSaved: (String email) {
-                      _email = email;
                     },
                   ),
                 ),
@@ -235,9 +223,6 @@ class _RegiterScreenState extends State<RegiterScreen> {
                       }
                       return null;
                     },
-                    onSaved: (String password) {
-                      _password = password;
-                    },
                   ),
                 ),
                 // ReEnter Password
@@ -296,9 +281,6 @@ class _RegiterScreenState extends State<RegiterScreen> {
                       }
                       return null;
                     },
-                    onSaved: (String password) {
-                      _confirmPassword = password;
-                    },
                   ),
                 ),
 
@@ -322,7 +304,6 @@ class _RegiterScreenState extends State<RegiterScreen> {
                                 name: _namecontroller.text.toString(),
                                 email: _emailcontroller.text.toString(),
                                 jopTitle: _jobTitlecontroller.text.toString());
-                            user.skills = ["C++", "Java", "Python"];
                             await auth.addUser(user);
                             FirebaseAuth.instance.signOut();
                             Fluttertoast.showToast(

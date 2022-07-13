@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:jt_jobs/firebase/models/user_model.dart';
 import 'package:jt_jobs/profile_screen/profile_screen_content.dart';
 import 'package:jt_jobs/profile_screen/profile_screen_header.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key key}) : super(key: key);
+  final UserModel user;
+  const ProfileScreen(this.user, {Key key}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -18,7 +20,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Stack(
         children: [
           Column(
-            children: [ProfileScreenHeader(), ProfileScreenContent()],
+            children: [
+              ProfileScreenHeader(widget.user),
+              ProfileScreenContent()
+            ],
           ),
         ],
       )),

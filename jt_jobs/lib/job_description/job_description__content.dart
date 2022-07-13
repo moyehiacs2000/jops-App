@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:jt_jobs/api/models/api_jop.dart';
+
+import '../firebase/models/firebase_job_model.dart';
 
 class JobDescriptionContent extends StatelessWidget {
-  final JobsResult data;
+  final FirebaseJobModel data;
   const JobDescriptionContent(this.data, {Key key}) : super(key: key);
 
   @override
@@ -30,7 +31,7 @@ class JobDescriptionContent extends StatelessWidget {
                 child: Column(
                   children: [
                     Image.network(
-                      data.thumbnail ??
+                      data.companyLogoUrl ??
                           "https://th.bing.com/th/id/R.301257298931ca32d333bcde5d523c85?rik=z9n1A0HDB1r8Vw&pid=ImgRaw&r=0",
                       height: 50,
                       width: 50,
