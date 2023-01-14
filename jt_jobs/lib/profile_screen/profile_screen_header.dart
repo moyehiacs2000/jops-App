@@ -8,8 +8,10 @@ import 'package:jt_jobs/firebase/models/user_model.dart';
 import 'package:flutter_document_picker/flutter_document_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:jt_jobs/profile_screen/Pdf_Viewer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../firebase/service/authentication_service.dart';
+import '../login_screen.dart';
 
 class ProfileScreenHeader extends StatefulWidget {
   final UserModel user;
@@ -43,19 +45,25 @@ class _ProfileScreenHeaderState extends State<ProfileScreenHeader> {
                 ),
               ),
               PopupMenuButton(
+                onSelected: (value) async {
+                  if (value == 0) {
+                    SharedPreferences preferences =
+                        await SharedPreferences.getInstance();
+                    await preferences.remove('email');
+                    await preferences.remove('password');
+                    if (mounted) {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()));
+                    }
+                  }
+                },
                 itemBuilder: (BuildContext context) {
                   return [
                     PopupMenuItem(
-                      child: Text('Preview'),
-                    ),
-                    PopupMenuItem(
-                      child: Text('Share'),
-                    ),
-                    PopupMenuItem(
-                      child: Text('Get Link'),
-                    ),
-                    PopupMenuItem(
-                      child: Text('Remove'),
+                      child: Text('Log Out'),
+                      value: 0,
                     ),
                   ];
                 },

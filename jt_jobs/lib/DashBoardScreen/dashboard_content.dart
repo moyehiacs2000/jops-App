@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:jt_jobs/firebase/models/user_model.dart';
-import 'package:jt_jobs/job_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../SearchScreen/job_card.dart';
+import '../edite_profile/edite_profile_screen.dart';
 import '../firebase/models/firebase_job_model.dart';
 
 class DashbordContent extends StatefulWidget {
   final UserModel user;
-  const DashbordContent(this.user, {Key key}) : super(key: key);
+  final int progress;
+  const DashbordContent(this.user, this.progress, {Key key}) : super(key: key);
 
   @override
   State<DashbordContent> createState() => _DashbordContentState();
@@ -19,16 +19,17 @@ class DashbordContent extends StatefulWidget {
 
 class _DashbordContentState extends State<DashbordContent> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List<FirebaseJobModel> Data = [];
+  List<FirebaseJobModel> data = [];
   bool recomendedLoading = true;
+  String profile;
   Future<void> getJobs() async {
-    await _firestore.collection("job")
+    _firestore.collection("job")
       ..where(
         "title",
         isGreaterThanOrEqualTo: widget.user.jopTitle,
       ).limit(4).get().then((value) {
         value.docs.forEach((element) {
-          Data.add(FirebaseJobModel.fromMap(element.data(), element.id));
+          data.add(FirebaseJobModel.fromMap(element.data(), element.id));
           if (mounted) {
             setState(() {
               recomendedLoading = false;
@@ -41,6 +42,9 @@ class _DashbordContentState extends State<DashbordContent> {
   @override
   void initState() {
     super.initState();
+    widget.progress < 100
+        ? profile = "Complete Your\nProfile"
+        : profile = "Edite Your\nProfile";
     getJobs();
   }
 
@@ -51,49 +55,58 @@ class _DashbordContentState extends State<DashbordContent> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: EdgeInsets.all(20),
-              margin: EdgeInsets.only(top: 10, bottom: 10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadiusDirectional.circular(30),
-                color: Color.fromRGBO(113, 40, 220, 0.1),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                    child: CircularPercentIndicator(
-                      radius: 60,
-                      lineWidth: 3.0,
-                      percent: 0.4,
-                      circularStrokeCap: CircularStrokeCap.round,
-                      progressColor: Color.fromRGBO(113, 40, 220, 1),
-                      backgroundColor: Colors.grey[350],
-                      center: Text(
-                        "40" + "%",
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromRGBO(113, 40, 220, 1)),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => EditeProfileScreen(widget.user)),
+                );
+              },
+              child: Container(
+                padding: EdgeInsets.all(20),
+                margin: EdgeInsets.only(top: 10, bottom: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadiusDirectional.circular(30),
+                  color: Color.fromRGBO(113, 40, 220, 0.1),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Container(
+                      child: CircularPercentIndicator(
+                        radius: 60,
+                        lineWidth: 3.0,
+                        percent: widget.progress / 100,
+                        circularStrokeCap: CircularStrokeCap.round,
+                        progressColor: Color.fromRGBO(113, 40, 220, 1),
+                        backgroundColor: Colors.grey[350],
+                        center: Text(
+                          "${widget.progress}" + "%",
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromRGBO(113, 40, 220, 1)),
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 10),
-                    child: Text("Complete Your\nProfile",
-                        style: GoogleFonts.rokkitt(
-                            color: Color.fromRGBO(113, 40, 220, 1),
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold)),
-                  ),
-                  Container(
-                    child: Icon(
-                      Icons.keyboard_arrow_right_rounded,
-                      size: 40,
-                      color: Colors.grey[350],
+                    Container(
+                      margin: EdgeInsets.only(bottom: 10),
+                      child: Text(profile,
+                          style: GoogleFonts.rokkitt(
+                              color: Color.fromRGBO(113, 40, 220, 1),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold)),
                     ),
-                  )
-                ],
+                    Container(
+                      child: Icon(
+                        Icons.keyboard_arrow_right_rounded,
+                        size: 40,
+                        color: Colors.grey[350],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             Row(
@@ -180,13 +193,13 @@ class _DashbordContentState extends State<DashbordContent> {
       child: Column(
         children: [
           ...List.generate(
-            Data.length,
+            data.length,
             (index) => Container(
               margin: const EdgeInsets.symmetric(horizontal: 5).copyWith(
                 top: index == 0 ? 20 : 0,
                 bottom: 20,
               ),
-              child: JopCard2(Data[index], widget.user),
+              child: JopCard2(data[index], widget.user),
             ),
           )
         ],

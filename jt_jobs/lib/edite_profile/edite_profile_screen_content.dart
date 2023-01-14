@@ -497,7 +497,7 @@ class _EditeProfileScreenContentState extends State<EditeProfileScreenContent> {
                       widget.user.skills.add(" ");
                       setState(() {});
                     },
-                    child: ElevatedButton(child: Text("Del")),
+                    child: Text("Del"),
                   )
                 ],
               ),

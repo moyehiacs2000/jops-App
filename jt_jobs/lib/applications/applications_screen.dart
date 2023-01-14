@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jt_jobs/applications/applications_content.dart';
 import 'package:jt_jobs/firebase/models/user_model.dart';
 
@@ -66,7 +65,7 @@ class _ApplicationsScreenState extends State<ApplicationsScreen> {
   @override
   void initState() {
     super.initState();
-    if (!interviews) {
+    if (!interviews && !(widget.user.appliedJobs.length == 0)) {
       getAppliedJobs(widget.user.appliedJobs);
     }
   }
@@ -90,13 +89,20 @@ class _ApplicationsScreenState extends State<ApplicationsScreen> {
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Applications",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 20, top: 20, bottom: 20),
+                  child: Text(
+                    "Applications",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -131,8 +137,12 @@ class _ApplicationsScreenState extends State<ApplicationsScreen> {
                         child: CircularProgressIndicator(
                             color: Color.fromRGBO(113, 40, 220, 1)),
                       ))
-                    : ApplicationsContent(
-                        interviews, widget.user, allAppliedJobs),
+                    : Expanded(
+                        child: Center(
+                          child: ApplicationsContent(
+                              interviews, widget.user, allAppliedJobs),
+                        ),
+                      ),
               ],
             ),
           ],

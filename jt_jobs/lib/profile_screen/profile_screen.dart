@@ -22,7 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Column(
             children: [
               ProfileScreenHeader(widget.user),
-              ProfileScreenContent()
+              ProfileScreenContent(widget.user)
             ],
           ),
         ],

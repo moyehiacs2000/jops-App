@@ -11,7 +11,7 @@ class JobService {
       var data = response.data;
       jobList = Welcome.fromJson(data).jobsResults;
     } catch (e) {
-      print(e);
+      print("yes");
     }
     return jobList;
   }

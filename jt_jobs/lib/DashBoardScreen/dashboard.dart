@@ -12,6 +12,31 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
+  int progress = 0;
+  @override
+  void initState() {
+    super.initState();
+    getProgress();
+  }
+
+  void getProgress() {
+    if (widget.user.name.isNotEmpty) {
+      progress += 20;
+    }
+    if (widget.user.jopTitle.isNotEmpty) {
+      progress += 20;
+    }
+    if (widget.user.cvUrl.isNotEmpty) {
+      progress += 20;
+    }
+    if (widget.user.about.isNotEmpty) {
+      progress += 20;
+    }
+    if (widget.user.skills.isNotEmpty) {
+      progress += 20;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +49,7 @@ class _DashBoardState extends State<DashBoard> {
               child: Column(
                 children: [
                   DashBoardHeader(widget.user),
-                  DashbordContent(widget.user)
+                  DashbordContent(widget.user, progress)
                 ],
               ),
             ),

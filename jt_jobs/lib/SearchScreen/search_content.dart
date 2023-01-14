@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jt_jobs/firebase/models/user_model.dart';
 import '../firebase/models/firebase_job_model.dart';
 import 'job_card.dart';

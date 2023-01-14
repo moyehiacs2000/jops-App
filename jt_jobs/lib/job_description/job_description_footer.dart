@@ -1,7 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jt_jobs/firebase/models/firebase_job_model.dart';
 import 'package:jt_jobs/firebase/models/user_model.dart';
 import 'package:jt_jobs/firebase/service/firebase_job_service.dart';
